@@ -1,0 +1,43 @@
+version: '3'
+services:
+    mysql:
+        image: mariadb:10.3
+        volumes:
+            - mysql-data:/var/lib/mysql
+        environment:
+            TZ: 'Asia/Shanghai'
+            MYSQL_ROOT_PASSWORD: 123123
+        command: ['mysqld', '--character-set-server=utf8']
+        ports:
+            - "3306:3306"
+        networks:
+            - backend
+    php:
+        image: "mylnmp/php:v1.0"
+        build:
+            context: .
+            dockerfile: Dockerfile-php
+        ports:
+            - "9000:9000"
+        networks:
+            - frontend
+            - backend
+        depends_on:
+            - mysql
+    nginx:
+        image: "mylnmp/nginx:v1.0"
+        build:
+            context: .
+            dockerfile: Dockerfile-nginx
+        ports:
+            - "80:80"
+        networks:
+            - frontend
+        depends_on:
+            - php
+volumes:
+    mysql-data:
+
+networks:
+    frontend:
+    backend:

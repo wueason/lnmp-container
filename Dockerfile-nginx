@@ -1,0 +1,6 @@
+FROM nginx:1.15
+
+ENV TZ=Asia/Shanghai
+
+COPY ./default_host.conf /etc/nginx/conf.d/default.conf
+COPY ./html /usr/share/nginx/html
